@@ -103,4 +103,40 @@ api.get('/getAllPersonas', (req, res) =>{
     });
 })
 
+api.get('/getPersonaFromCedula', (req, res) =>{
+
+    var cedula = req.body.cedula;
+    if(cedula == "" || cedula == null){
+        var respuesta = {
+            "status":"500",
+            "reason":"El parametro cedula es obligatorio"
+        }
+        res.json({respuesta})
+    } else {
+        mongoose.connect(uri, {useNewUrlParser: true})
+        .then(() => {
+            const Persona = mongoose.model('Persona', personaSchema);
+            Persona.find({
+                cedula: cedula
+            })
+            .then(doc => {
+            var respuesta = {
+                "state": "200",
+                "data": doc
+            };
+            res.json({respuesta});
+            })
+            .catch(err => {
+            var respuesta = {
+                "state": "404"
+            };
+            res.json({respuesta});
+            })
+        })
+        .catch(err => {
+    
+        });
+    }
+})
+
 module.exports = api;
