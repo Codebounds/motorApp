@@ -139,4 +139,39 @@ api.get('/getPersonaFromCedula', (req, res) =>{
     }
 })
 
+api.get('/getPersonasFromTipo', (req, res) => {
+    var tipo = req.body.tipo;
+    if(tipo == "" || tipo == null){
+        var respuesta = {
+            "status":"500",
+            "reason":"El parametro tipo es obligatorio"
+        }
+        res.json({respuesta})
+    } else {
+        mongoose.connect(uri, {useNewUrlParser: true})
+        .then(() => {
+            const Persona = mongoose.model('Persona', personaSchema);
+            Persona.find({
+                tipo: tipo
+            })
+            .then(doc => {
+            var respuesta = {
+                "state": "200",
+                "data": doc
+            };
+            res.json({respuesta});
+            })
+            .catch(err => {
+            var respuesta = {
+                "state": "404"
+            };
+            res.json({respuesta});
+            })
+        })
+        .catch(err => {
+    
+        });
+    }
+});
+
 module.exports = api;
