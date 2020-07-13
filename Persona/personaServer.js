@@ -36,7 +36,7 @@ api.post('/savePersona', (req, res) =>{
     var tipo = req.body.tipo;
 
     if(cedula == "" || cedula == null){
-        res.json(error.getError("El parametro cedula es obligatorio")).status(400)
+        res.status(400).json(error.getError("El parametro cedula es obligatorio"))
     } else {
         mongoose.connect(uri, {useNewUrlParser: true})
         .then(() => {
@@ -52,14 +52,14 @@ api.post('/savePersona', (req, res) =>{
                 tipo: tipo
             });
             nuevaPersona.save().then(doc => {
-                res.json().status(200);
+                res.status(200).json();
             })
             .catch(err => {
-                res.json({"reason":"Error interno, vuelva a intentarlo"}).status(500);
+                res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
             })
         })
         .catch(err => {
-            res.json({"reason":"Error en conexión a base de datos"}).status(500);
+            res.status(500).json({"reason":"Error en conexión a base de datos"});
         })
     }
 
@@ -75,14 +75,14 @@ api.get('/getAllPersonas', (req, res) =>{
             var respuesta = {
                 "data": doc
             };
-            res.json({respuesta}).status(200);
+            res.status(200).json({respuesta});
           })
           .catch(err => {
-            res.json({"reason":"Error interno, vuelva a intentalo"}).status(500);
+            res.status(500).json({"reason":"Error interno, vuelva a intentalo"});
           })
     })
     .catch(err => {
-        res.json({"reason":"Error en conexión a base de datos"}).status(500);
+        res.status(500).json({"reason":"Error en conexión a base de datos"});
     });
 })
 
@@ -90,7 +90,7 @@ api.post('/getPersonaFromCedula', (req, res) =>{
 
     var cedula = req.body.cedula;
     if(cedula == "" || cedula == null){
-        res.json({"reason":"El parametro cedula es obligatorio"}).status(400)
+        res.status(400).json({"reason":"El parametro cedula es obligatorio"});
     } else {
         mongoose.connect(uri, {useNewUrlParser: true})
         .then(() => {
@@ -103,17 +103,17 @@ api.post('/getPersonaFromCedula', (req, res) =>{
                     var respuesta = {
                         "data": doc
                     };
-                    res.json({respuesta}).status(200);
+                    res.status(200).json({respuesta});
                 }else {
                     res.status(400).json({"reason":"No existe usuario asociado a este número de cédula"});
                 }
             })
             .catch(err => {
-            res.json({"reason":"Error interno, vuelva a intentarlo"}).status(500);
+            res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
             })
         })
         .catch(err => {
-            res.json({"reason":"Error en conexión a base de datos"}).status(500);
+            res.status(500).json({"reason":"Error en conexión a base de datos"});
         });
     }
 })
@@ -121,7 +121,7 @@ api.post('/getPersonaFromCedula', (req, res) =>{
 api.post('/getPersonasFromTipo', (req, res) => {
     var tipo = req.body.tipo;
     if(tipo == "" || tipo == null){
-        res.json({"reason":"El parametro tipo es obligatorio"}).status(400);
+        res.status(400).json({"reason":"El parametro tipo es obligatorio"});
     } else {
         mongoose.connect(uri, {useNewUrlParser: true})
         .then(() => {
@@ -133,14 +133,14 @@ api.post('/getPersonasFromTipo', (req, res) => {
             var respuesta = {
                 "data": doc
             };
-            res.json({respuesta}).status(200);
+            res.status(200).json({respuesta});
             })
             .catch(err => {
-            res.json({"reason":"Error interno, vuelva a intentarlo"}).status(500);
+            res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
             })
         })
         .catch(err => {
-            res.json({"reason":"Error en conexión a base de datos"}).status(500);
+            res.status(500).json({"reason":"Error en conexión a base de datos"});
         });
     }
 });
@@ -149,9 +149,9 @@ api.post('/doLogin', (req, res) => {
     var cedula = req.body.cedula;
     var pass = req.body.pass;
     if (cedula == "" || cedula == null){
-        res.json({"reason":"El parametro cedula es obligatorio"}).status(400);
+        res.status(400).json({"reason":"El parametro cedula es obligatorio"});
     }else if (pass == "" || pass == null){
-        res.json({"resaon":"El parametro pass es obligatorio"}).status(400);
+        res.status(400).json({"resaon":"El parametro pass es obligatorio"});
     } else {
         mongoose.connect(uri, {useNewUrlParser: true})
         .then(() => {
@@ -165,17 +165,17 @@ api.post('/doLogin', (req, res) => {
                     var respuesta = {
                         "data": doc
                     };
-                    res.json({respuesta})-status(200);
+                    res.status(200).json({respuesta});
                 }else {
-                    res.json({"reason":"Usuario/contraseña incorrectos"}).status(400);
+                    res.status(400).json({"reason":"Usuario/contraseña incorrectos"});
                 }
             })
             .catch(err => {
-                res.json({"reason":"Error interno, vuelva a intentarlo"}).status(500);
+                res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
             })
         })
         .catch(err => {
-            res.json({"reason":"Error en conexión a base de datos"}).status(500);
+            res.status(500).json({"reason":"Error en conexión a base de datos"});
         })
     }
 });
