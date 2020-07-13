@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const mongo = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
 const { MongoNetworkError } = require('mongodb');
+const error = require('../Helper/Errors');
 
 const uri = 'mongodb+srv://admin:admin@motorapp.4hjcl.mongodb.net/MotorApp?retryWrites=true&w=majority';
 
@@ -35,11 +36,7 @@ api.post('/savePersona', (req, res) =>{
     var tipo = req.body.tipo;
 
     if(cedula == "" || cedula == null){
-        var respuesta = {
-            "state":"400",
-            "reason":"El parametro cedula es obligatorio"
-        }
-        res.json({respuesta})
+        res.json(error.getError("El parametro cedula es obligatorio")).status(400)
     } else {
         mongoose.connect(uri, {useNewUrlParser: true})
         .then(() => {
@@ -55,24 +52,14 @@ api.post('/savePersona', (req, res) =>{
                 tipo: tipo
             });
             nuevaPersona.save().then(doc => {
-                var respuesta = {
-                    "state": "200"
-                };
-                res.json({respuesta});
+                res.json().status(200);
             })
             .catch(err => {
-                var respuesta = {
-                    "state": "400"
-                };
-                res.json({respuesta});
+                res.json({"reason":"Error interno, vuelva a intentarlo"}).status(500);
             })
         })
         .catch(err => {
-            console.error('Database connection error')
-            var respuesta = {
-                "state": "404"
-            };
-            res.json({respuesta});
+            res.json({"reason":"Error en conexión a base de datos"}).status(500);
         })
     }
 
@@ -86,32 +73,24 @@ api.get('/getAllPersonas', (req, res) =>{
         Persona.find()
           .then(doc => {
             var respuesta = {
-                "state": "200",
                 "data": doc
             };
-            res.json({respuesta});
+            res.json({respuesta}).status(200);
           })
           .catch(err => {
-            var respuesta = {
-                "state": "404"
-            };
-            res.json({respuesta});
+            res.json({"reason":"Error interno, vuelva a intentalo"}).status(500);
           })
     })
     .catch(err => {
-
+        res.json({"reason":"Error en conexión a base de datos"}).status(500);
     });
 })
 
-api.get('/getPersonaFromCedula', (req, res) =>{
+api.post('/getPersonaFromCedula', (req, res) =>{
 
     var cedula = req.body.cedula;
     if(cedula == "" || cedula == null){
-        var respuesta = {
-            "status":"500",
-            "reason":"El parametro cedula es obligatorio"
-        }
-        res.json({respuesta})
+        res.json({"reason":"El parametro cedula es obligatorio"}).status(400)
     } else {
         mongoose.connect(uri, {useNewUrlParser: true})
         .then(() => {
@@ -120,33 +99,29 @@ api.get('/getPersonaFromCedula', (req, res) =>{
                 cedula: cedula
             })
             .then(doc => {
-            var respuesta = {
-                "state": "200",
-                "data": doc
-            };
-            res.json({respuesta});
+                if (doc.length > 0){
+                    var respuesta = {
+                        "data": doc
+                    };
+                    res.json({respuesta}).status(200);
+                }else {
+                    res.json({"reason":"No hay usua"})
+                }
             })
             .catch(err => {
-            var respuesta = {
-                "state": "404"
-            };
-            res.json({respuesta});
+            res.json({"reason":"Error interno, vuelva a intentarlo"}).status(500);
             })
         })
         .catch(err => {
-    
+            res.json({"reason":"Error en conexión a base de datos"}).status(500);
         });
     }
 })
 
-api.get('/getPersonasFromTipo', (req, res) => {
+api.post('/getPersonasFromTipo', (req, res) => {
     var tipo = req.body.tipo;
     if(tipo == "" || tipo == null){
-        var respuesta = {
-            "status":"500",
-            "reason":"El parametro tipo es obligatorio"
-        }
-        res.json({respuesta})
+        res.json({"reason":"El parametro tipo es obligatorio"}).status(400);
     } else {
         mongoose.connect(uri, {useNewUrlParser: true})
         .then(() => {
@@ -156,21 +131,52 @@ api.get('/getPersonasFromTipo', (req, res) => {
             })
             .then(doc => {
             var respuesta = {
-                "state": "200",
                 "data": doc
             };
-            res.json({respuesta});
+            res.json({respuesta}).status(200);
             })
             .catch(err => {
-            var respuesta = {
-                "state": "404"
-            };
-            res.json({respuesta});
+            res.json({"reason":"Error interno, vuelva a intentarlo"}).status(500);
             })
         })
         .catch(err => {
-    
+            res.json({"reason":"Error en conexión a base de datos"}).status(500);
         });
+    }
+});
+
+api.post('/doLogin', (req, res) => {
+    var cedula = req.body.cedula;
+    var pass = req.body.pass;
+    if (cedula == "" || cedula == null){
+        res.json({"reason":"El parametro cedula es obligatorio"}).status(400);
+    }else if (pass == "" || pass == null){
+        res.json({"resaon":"El parametro pass es obligatorio"}).status(400);
+    } else {
+        mongoose.connect(uri, {useNewUrlParser: true})
+        .then(() => {
+            const Persona = mongoose.model('Persona', personaSchema);
+            Persona.find({
+                cedula: cedula,
+                pass: pass
+            })
+            .then(doc => {
+                if (doc.length > 0) {
+                    var respuesta = {
+                        "data": doc
+                    };
+                    res.json({respuesta})-status(200);
+                }else {
+                    res.json({"reason":"Usuario/contraseña incorrectos"}).status(400);
+                }
+            })
+            .catch(err => {
+                res.json({"reason":"Error interno, vuelva a intentarlo"}).status(500);
+            })
+        })
+        .catch(err => {
+            res.json({"reason":"Error en conexión a base de datos"}).status(500);
+        })
     }
 });
 
