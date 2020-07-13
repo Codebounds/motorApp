@@ -145,6 +145,42 @@ api.post('/getPersonasFromTipo', (req, res) => {
     }
 });
 
+api.post('/registro', (req, res) => {
+    var cedula = req.body.cedula;
+    var pass = req.body.pass;
+    if (cedula == "" || cedula == null){
+        res.status(400).json({"reason":"El parametro cedula es obligatorio"});
+    } else if (pass == "" || pass == null){
+        res.status(400).json({"reason":"El parametro pass es obligatorio"});
+    } else {
+        mongoose.connect(uri, {useNewUrlParser: true})
+        .then(() => {
+            const Persona = mongoose.model('Persona', personaSchema);
+            Persona.findOne({
+                cedula: cedula
+            }, function(err, persona){
+                if(!err){
+                    persona.pass = pass
+                    persona.save().then(doc => {
+                        var respuesta = {
+                            "data": doc
+                        };
+                        res.status(200).json({respuesta});
+                    })
+                    .catch(err => {
+                        res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+                    })
+                } else {
+                    res.status(400).json({"reason":"No existe usuario asociado a este número de cédula"});
+                }
+            })
+        })
+        .catch(err => {
+            res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+        })
+    }
+});
+
 api.post('/doLogin', (req, res) => {
     var cedula = req.body.cedula;
     var pass = req.body.pass;
