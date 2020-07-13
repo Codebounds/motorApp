@@ -105,7 +105,7 @@ api.post('/getPersonaFromCedula', (req, res) =>{
                     };
                     res.json({respuesta}).status(200);
                 }else {
-                    res.json({"reason":"No hay usua"})
+                    res.json({"reason":"No existe usuario asociado a este número de cédula"}).status(400);
                 }
             })
             .catch(err => {
