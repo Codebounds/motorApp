@@ -95,16 +95,12 @@ api.post('/getPersonaFromCedula', (req, res) =>{
         mongoose.connect(uri, {useNewUrlParser: true})
         .then(() => {
             const Persona = mongoose.model('Persona', personaSchema);
-            Persona.find({
+            Persona.findOne({
                 cedula: cedula
-            })
-            .then(doc => {
-                if (doc.length > 0){
-                    var respuesta = {
-                        "data": doc
-                    };
-                    res.status(200).json({respuesta});
-                }else {
+            }, function(err, persona){
+                if (!err){
+                    res.status(200).json({persona});
+                } else {
                     res.status(400).json({"reason":"No existe usuario asociado a este número de cédula"});
                 }
             })
@@ -162,10 +158,7 @@ api.post('/registro', (req, res) => {
                 if(!err){
                     persona.pass = pass
                     persona.save().then(doc => {
-                        var respuesta = {
-                            "data": doc
-                        };
-                        res.status(200).json({respuesta});
+                        res.status(200).json({doc});
                     })
                     .catch(err => {
                         res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
