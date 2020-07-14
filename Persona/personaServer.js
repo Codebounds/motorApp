@@ -185,17 +185,13 @@ api.post('/doLogin', (req, res) => {
         mongoose.connect(uri, {useNewUrlParser: true})
         .then(() => {
             const Persona = mongoose.model('Persona', personaSchema);
-            Persona.find({
+            Persona.findOne({
                 cedula: cedula,
                 pass: pass
-            })
-            .then(doc => {
-                if (doc.length > 0) {
-                    var respuesta = {
-                        "data": doc
-                    };
-                    res.status(200).json({respuesta});
-                }else {
+            }, function(err, persona){
+                if(!err){
+                    res.status(200).json({persona});
+                } else {
                     res.status(400).json({"reason":"Usuario/contraseña incorrectos"});
                 }
             })
