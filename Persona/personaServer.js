@@ -98,7 +98,7 @@ api.post('/getPersonaFromCedula', (req, res) =>{
             Persona.findOne({
                 cedula: cedula
             }, function(err, persona){
-                if (!err){
+                if (persona != null){
                     res.status(200).json({persona});
                 } else {
                     res.status(400).json({"reason":"No existe usuario asociado a este número de cédula"});
@@ -155,7 +155,7 @@ api.post('/registro', (req, res) => {
             Persona.findOne({
                 cedula: cedula
             }, function(err, persona){
-                if(!err){
+                if(persona != null){
                     persona.pass = pass
                     persona.save().then(doc => {
                         res.status(200).json({doc});
