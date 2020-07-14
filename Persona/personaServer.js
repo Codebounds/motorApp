@@ -189,7 +189,7 @@ api.post('/doLogin', (req, res) => {
                 cedula: cedula,
                 pass: pass
             }, function(err, persona){
-                if(!err){
+                if(persona != null){
                     res.status(200).json({persona});
                 } else {
                     res.status(400).json({"reason":"Usuario/contraseña incorrectos"});
