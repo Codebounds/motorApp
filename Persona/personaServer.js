@@ -157,8 +157,8 @@ api.post('/registro', (req, res) => {
             }, function(err, persona){
                 if(persona != null){
                     persona.pass = pass
-                    persona.save().then(doc => {
-                        res.status(200).json({doc});
+                    persona.save().then(persona => {
+                        res.status(200).json({persona});
                     })
                     .catch(err => {
                         res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
