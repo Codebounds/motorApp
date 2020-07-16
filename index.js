@@ -1,7 +1,7 @@
-const persona = require('./Persona/persona');
+const server = require('./Helper/server');
 const PORT = process.env.PORT || 5000
 
 
-persona.listen(PORT, '0.0.0.0', () => {
-    console.log('listening to persona');
-})
+server.listen(PORT, '0.0.0.0', () => {
+    console.log('listening to server');
+});
