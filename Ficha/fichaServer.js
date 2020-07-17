@@ -103,12 +103,9 @@ api.post('/getHistorial', (req,res) => {
             cedula: cedula,
             estado: "LISTO"
         })
-        .then(doc => {
-            if (doc.length > 0){
-                var respuesta = {
-                    "data": doc
-                };
-                res.status(200).json({respuesta});
+        .then(historial => {
+            if (historial.length > 0){
+                res.status(200).json({historial});
             } else {
                 res.status(400).json({"reason":"No hay vehiculos reparados"});
             }
