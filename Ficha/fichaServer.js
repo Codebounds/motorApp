@@ -128,22 +128,15 @@ api.post('/getFichaActualFromCedula', (req,res) => {
     .then(() => {
         console.log("successful connection!");
         const Ficha = mongoose.model('Ficha', fichaSchema);
-        Ficha.find({
+        Ficha.findOne({
             cedula: cedula,
             estado: {$in: ['INGRESO', 'REPARACION', 'RECORRIDO']}
-        })
-        .then(doc => {
-            if (doc.length > 0){
-                var respuesta = {
-                    "data": doc[0]
-                };
-                res.status(200).json({respuesta});
+        }, function(err, ficha){
+            if (ficha != null){
+                res.status(200).json({ficha});
             } else {
                 res.status(400).json({"reason":"No hay vehiculos en el taller"});
             }
-        })
-        .catch(err => {
-            res.status(500).json({"reason":"Error en el servidor, vuelva a intentarlo"});
         })
     })
     .catch(err => {
