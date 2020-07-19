@@ -63,7 +63,36 @@ api.post('/saveRepuesto', (req,res) => {
         })
 });
 
-api.post('updateEstadoCliente', (req,res) => {
+api.post('/getPrereforma', (req,res) => {
+    var orden = req.body.orden;
+
+    if (orden == null || orden == ""){
+        res.status(401).json({"reason":"El parametro orden es obligatorio"});
+    }
+
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+        .then(() => {
+            const Reparacion = mongoose.model('Reparacion', reparacionesSchema)
+            Reparacion.find({
+                orden: orden
+            })
+            .then(reparaciones => {
+                if (reparaciones.length > 0){
+                    res.status(200).json({reparaciones});
+                } else {
+                    res.status(401).json({"reason":"No hay reparaciones disponibles"});
+                }
+            })
+            .catch(err => {
+                res.status(500).json({"reason":"Error en base de datos"});
+            })
+        })
+        .catch(err => {
+            res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+        })
+});
+
+api.post('/updateEstadoCliente', (req,res) => {
     var orden = req.body.orden;
     var nombre = req.body.nombre;
     var estadoCliente = req.body.estadoCliente;
@@ -82,7 +111,7 @@ api.post('updateEstadoCliente', (req,res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
-            const Reparacion = mongoose.model('Reparacion', fichaSchema);
+            const Reparacion = mongoose.model('Reparacion', reparacionesSchema);
             Reparacion.findOne({
                 orden: orden,
                 nombre: nombre
@@ -105,7 +134,7 @@ api.post('updateEstadoCliente', (req,res) => {
         })
 })
 
-api.post('updateEstadoTaller', (req,res) => {
+api.post('/updateEstadoTaller', (req,res) => {
     var orden = req.body.orden;
     var nombre = req.body.nombre;
     var estadoTaller = req.body.estadoTaller;
@@ -124,7 +153,7 @@ api.post('updateEstadoTaller', (req,res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
-            const Reparacion = mongoose.model('Reparacion', fichaSchema);
+            const Reparacion = mongoose.model('Reparacion', reparacionesSchema);
             Reparacion.findOne({
                 orden: orden,
                 nombre: nombre
@@ -147,7 +176,7 @@ api.post('updateEstadoTaller', (req,res) => {
         })
 })
 
-api.post('updateValor', (req,res) => {
+api.post('/updateValor', (req,res) => {
     var orden = req.body.orden;
     var nombre = req.body.nombre;
     var valor = req.body.valor;
@@ -166,7 +195,7 @@ api.post('updateValor', (req,res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
-            const Reparacion = mongoose.model('Reparacion', fichaSchema);
+            const Reparacion = mongoose.model('Reparacion', reparacionesSchema);
             Reparacion.findOne({
                 orden: orden,
                 nombre: nombre
