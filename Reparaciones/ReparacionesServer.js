@@ -116,7 +116,7 @@ api.post('/updateEstadoCliente', (req,res) => {
         res.status(401).json({"reason":"El parametro nombre es obligatorio"});
     }
 
-    if (estadoCliente == "" || estadoTaller == null){
+    if (estadoCliente == "" || estadoCliente == null){
         res.status(401).json({"reason":"El parametro estadoCliente es obligatorio"});
     }
 
