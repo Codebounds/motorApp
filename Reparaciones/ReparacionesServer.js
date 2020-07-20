@@ -78,7 +78,18 @@ api.post('/getPrereforma', (req,res) => {
             })
             .then(reparaciones => {
                 if (reparaciones.length > 0){
-                    res.status(200).json({reparaciones});
+                    var reparacionSinDefinir = false;
+                    for (var i=0;i<reparaciones.length;i++){
+                        if(reparaciones[i].valor == "SIN DEFINIR"){
+                            reparacionSinDefinir = true;
+                            break;
+                        }
+                    }
+                    if (reparacionSinDefinir == true){
+                        res.status(400).json({"reason":"Las reparaciones están por definir"});
+                    } else {
+                        res.status(200).json({reparaciones});
+                    }
                 } else {
                     res.status(401).json({"reason":"No hay reparaciones disponibles"});
                 }
