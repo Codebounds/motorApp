@@ -9,11 +9,14 @@ const { MongoNetworkError } = require('mongodb');
 
 const uri = 'mongodb+srv://admin:admin@motorapp.4hjcl.mongodb.net/MotorApp?retryWrites=true&w=majority';
 
-api.use(bodyParser.urlencoded({extended: false}));
+//api.use(bodyParser.urlencoded({extended: false}));
+api.use(bodyParser.json({limit: '50mb'}));
+api.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 const fichaSchema = new mongoose.Schema({
     cedula: String,
     marca: String,
+    modelo: String,
     color: String,
     placa: String,
     kilometraje: String,

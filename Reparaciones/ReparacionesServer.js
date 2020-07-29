@@ -41,7 +41,7 @@ api.post('/saveRepuesto', (req,res) => {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
             console.log("successful connection!");
-            const Reparacion = mongoose.model('Reparacion', reparacionesSchema);
+            const Reparacion = mongoose.model('Reparacion', reparacionesSchema); 
             const nuevaReparacion = new Reparacion({ 
                 orden: orden,
                 nombre: nombre,
