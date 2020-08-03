@@ -26,9 +26,11 @@ api.post('/saveVehiculo', (req,res) => {
 
     if (cedula == "" || cedula == null){
         res.status(401).json({"reason":"El parametro cedula es obligatorio"});
+        return
     }
     if (placa == "" || placa == null){
         res.status(401).json({"reason":"El parametro placa es obligatorio"});
+        return
     }
 
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -74,6 +76,11 @@ api.post('/saveFicha', (req, res) =>{
     var imagenPosterior = req.body.imagenPosterior;
     var accesorios = req.body.accesorios;
 
+    if(orden == "" || orden == null){
+        res.status(401).json({"reason":"El parametro orden es obligatorio"});
+        return
+    }
+
     mongoose.connect(sever.uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
             console.log("successful connection!");
@@ -101,7 +108,7 @@ api.post('/saveFicha', (req, res) =>{
                         res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
                     })
                 } else {
-                    res.status(400).json({"reason":"No existe usuario asociado a este número de cédula"});
+                    res.status(400).json({"reason":"No existe ficha asociada a este número de orden"});
                 }
             })
         })
@@ -177,7 +184,7 @@ api.post('/getFichasFromPlaca', (req,res) => {
         res.status(401).json({"reason":"El parámetro placa es obligatorio"});
         return;
     }
-    if(estado == "" || estado == null || estado == "ALL"){
+    if(estado == "ALL"){
         busquedaEstado = ['INGRESO', 'REPARACION', 'RECORRIDO', "LISTO"];
     } else {
         busquedaEstado = ['INGRESO', 'REPARACION', 'RECORRIDO']
@@ -232,11 +239,11 @@ api.post('/getFichaActualFromCedula', (req,res) => {
     
 });
 
-api.post('/getFichasFromTecnicoParaDefinir', async(req, res) => {
-    console.log('getfichasfromtecnicoparadefinir')
+api.post('/getFichasFromTecnicoParaDefinir', async(req, res) => {   
     var tecnicoCedula = req.body.tecnicoCedula;
     if (tecnicoCedula == "" || tecnicoCedula == null){
         res.status(401).json({"reason":"El parametro tecnicoCedula es obligatorio"});
+        return;
     }
     var fichasParaDefinirTecnico = []
     try{
@@ -271,10 +278,12 @@ api.post('/saveDiagnostico', (req,res) => {
     var orden = req.body.orden;
     var diagnostico = req.body.diagnostico;
     if (diagnostico == "" || diagnostico == null){
-        res.status(400).json({"reason":"El parametro diagnostico es obligatorio"});
+        res.status(401).json({"reason":"El parametro diagnostico es obligatorio"});
+        return;
     }
     if (orden == "" || orden == null){
-        res.status(400).json({"reason":"El parametro orden es obligatorio"});
+        res.status(401).json({"reason":"El parametro orden es obligatorio"});
+        return;
     }
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
@@ -291,7 +300,7 @@ api.post('/saveDiagnostico', (req,res) => {
                         res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
                     })
                 } else {
-                    res.status(400).json({"reason":"No existe usuario asociado a este número de cédula"});
+                    res.status(400).json({"reason":"No existe ficha asociada a este número de orden"});
                 }
             })
         })
@@ -300,14 +309,16 @@ api.post('/saveDiagnostico', (req,res) => {
         })
 })
 
-api.post('/saveEstadoDelVehiculo', (req,res) => {
+api.post('/saveEstadoVehiculo', (req,res) => {
     var orden = req.body.orden;
     var estado = req.body.estado;
     if (estado == "" || estado == null){
-        res.status(400).json({"reason":"El parametro estado es obligatorio"});
+        res.status(401).json({"reason":"El parametro estado es obligatorio"});
+        return;
     }
     if (orden == "" || orden == null){
-        res.status(400).json({"reason":"El parametro orden es obligatorio"});
+        res.status(401).json({"reason":"El parametro orden es obligatorio"});
+        return;
     }
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
@@ -324,7 +335,7 @@ api.post('/saveEstadoDelVehiculo', (req,res) => {
                         res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
                     })
                 } else {
-                    res.status(400).json({"reason":"No existe usuario asociado a este número de cédula"});
+                    res.status(400).json({"reason":"No existe ficha asociada a este número de orden"});
                 }
             })
         })
@@ -386,40 +397,6 @@ api.post('/getFichasReparacionEstadoTaller', async(req,res) => {
             res.status(500).json({"reason":"Error en la conexión a la base de datos"})
         })
 });
-
-api.post('/saveDiagnostico', (req,res) => {
-    var orden = req.body.orden;
-    var diagnostico = req.body.diagnostico;
-    
-    if(orden == "" || orden == null){
-        res.status(401).json({"reason":"El parametro orden es obligatorio"})
-    }
-    if(diagnostico == "" || diagnostico == null){
-        res.status(401).json({"reason":"El parametro diagnostico es obligatorio"});
-    }
-    mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
-        .then(() => {
-            const Ficha = mongoose.model('Ficha', server.fichaSchema);
-            Ficha.findOne({
-                orden: orden
-            }, function(err, ficha){
-                if(ficha != null){
-                    ficha.diagnostico = diagnostico
-                    ficha.save().then(ficha => {
-                        res.status(200).json();
-                    })
-                    .catch(err => {
-                        res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
-                    })
-                } else {
-                    res.status(400).json({"reason":"No existe usuario asociado a este número de cédula"});
-                }
-            })
-        })
-        .catch(err => {
-            res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
-        })
-})
 
 
 module.exports = api;

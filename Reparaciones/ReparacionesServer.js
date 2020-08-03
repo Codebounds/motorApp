@@ -19,14 +19,17 @@ api.post('/saveRepuesto', (req,res) => {
 
     if (orden == "" || orden == null){
         res.status(401).json({"reason":"El parametro repuesto es obligatorio"});
+        return;
     }
 
     if (nombre == "" || nombre == null){
         res.status(401).json({"reason":"El parametro nombre es obligatorio"});
+        return;
     }
 
     if (prioridad == "" || prioridad == null){
         res.status(401).json({"reason":"El parametro prioridad es obligatorio"});
+        return;
     }
 
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -59,6 +62,7 @@ api.post('/getProforma', (req,res) => {
 
     if (orden == null || orden == ""){
         res.status(401).json({"reason":"El parametro orden es obligatorio"});
+        return;
     }
 
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -101,14 +105,17 @@ api.post('/updateEstadoCliente', (req,res) => {
 
     if (orden == "" || orden == null){
         res.status(401).json({"reason":"El parametro orden es obligatorio"});
+        return;
     }
 
     if (nombre == "" || nombre == null){
         res.status(401).json({"reason":"El parametro nombre es obligatorio"});
+        return;
     }
 
     if (estadoCliente == "" || estadoCliente == null){
         res.status(401).json({"reason":"El parametro estadoCliente es obligatorio"});
+        return;
     }
 
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -143,14 +150,17 @@ api.post('/updateEstadoTaller', (req,res) => {
 
     if (orden == "" || orden == null){
         res.status(401).json({"reason":"El parametro orden es obligatorio"});
+        return;
     }
 
     if (nombre == "" || nombre == null){
         res.status(401).json({"reason":"El parametro nombre es obligatorio"});
+        return;
     }
 
     if (estadoTaller == "" || estadoTaller == null){
         res.status(401).json({"reason":"El parametro estadoTaller es obligatorio"});
+        return;
     }
 
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -185,14 +195,17 @@ api.post('/updateCosto', (req,res) => {
 
     if (orden == "" || orden == null){
         res.status(401).json({"reason":"El parametro orden es obligatorio"});
+        return;
     }
 
     if (nombre == "" || nombre == null){
         res.status(401).json({"reason":"El parametro nombre es obligatorio"});
+        return;
     }
 
     if (costo == "" || costo == null){
         res.status(401).json({"reason":"El parametro costo es obligatorio"});
+        return;
     }
 
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -227,14 +240,17 @@ api.post('/updateLugar', (req,res) => {
 
     if (orden == "" || orden == null){
         res.status(401).json({"reason":"El parametro orden es obligatorio"});
+        return;
     }
 
     if (nombre == "" || nombre == null){
         res.status(401).json({"reason":"El parametro nombre es obligatorio"});
+        return;
     }
 
     if (lugar == "" || lugar == null){
         res.status(401).json({"reason":"El parametro lugar es obligatorio"});
+        return;
     }
 
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})

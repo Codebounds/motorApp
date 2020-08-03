@@ -16,6 +16,7 @@ api.post('/ingresarAccesorio', (req, res) => {
     
     if(nombre == "" || nombre == null){
         res.status(401).json({"reason":"El parametro nombre es obligatorio"})
+        return;
     }
 
     mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})

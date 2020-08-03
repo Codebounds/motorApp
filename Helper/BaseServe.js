@@ -41,7 +41,7 @@ const fichaSchema = new mongoose.Schema({
     imagenPosterior: String,
     accesorios: String,
     diagnostico: String,
-    estado: String,
+    estado: String, //INGRESO REPARACION RECORRIDO LISTO
     orden: String
   });
 
@@ -51,7 +51,7 @@ const fichaSchema = new mongoose.Schema({
     costo: String,
     prioridad: String,//BAJA - MEDIA - ALTA
     estadoTaller: String, //NO DEFINIDO - COMPRADO - POR COMPRAR
-    estadoCliente: String,//NO DEFINIDO - ACEPTADO - RECHAZADO
+    estadoCliente: String,//NO DEFINIDO - APROBADO - RECHAZADO
     lugar: String//NO DEFINIDO - TALLER - TIENDA
 });
 
