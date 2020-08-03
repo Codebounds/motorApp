@@ -7,20 +7,9 @@ const mongo = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
 const { MongoNetworkError } = require('mongodb');
 const error = require('../Helper/Errors');
+const server = require('../Helper/BaseServe');
 
-const uri = 'mongodb+srv://admin:admin@motorapp.4hjcl.mongodb.net/MotorApp?retryWrites=true&w=majority';
-
-
-const personaSchema = new mongoose.Schema({
-    cedula: String,
-    nombre: String,
-    pass: String,
-    telefono: String,
-    email: String,
-    direccion: String,
-    ciudad: String,
-    tipo: String
-  });  
+ 
 
 
 api.use(bodyParser.urlencoded({extended: false}));
@@ -38,10 +27,10 @@ api.post('/savePersona', (req, res) =>{
     if(cedula == "" || cedula == null){
         res.status(400).json(error.getError("El parametro cedula es obligatorio"))
     } else {
-        mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+        mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
             console.log("successful connection!");
-            const Persona = mongoose.model('Persona', personaSchema);
+            const Persona = mongoose.model('Persona', server.personaSchema);
             const nuevaPersona = new Persona({ 
                 cedula: cedula,
                 nombre: nombre,
@@ -67,9 +56,9 @@ api.post('/savePersona', (req, res) =>{
 });
 
 api.get('/getAllPersonas', (req, res) =>{
-    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+    mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => {
-        const Persona = mongoose.model('Persona', personaSchema);
+        const Persona = mongoose.model('Persona', server.personaSchema);
         Persona.find()
           .then(doc => {
             var respuesta = {
@@ -92,9 +81,9 @@ api.post('/getPersonaFromCedula', (req, res) =>{
     if(cedula == "" || cedula == null){
         res.status(400).json({"reason":"El parametro cedula es obligatorio"});
     } else {
-        mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+        mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
-            const Persona = mongoose.model('Persona', personaSchema);
+            const Persona = mongoose.model('Persona', server.personaSchema);
             Persona.findOne({
                 cedula: cedula
             }, function(err, persona){
@@ -119,9 +108,9 @@ api.post('/getPersonasFromTipo', (req, res) => {
     if(tipo == "" || tipo == null){
         res.status(400).json({"reason":"El parametro tipo es obligatorio"});
     } else {
-        mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+        mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
-            const Persona = mongoose.model('Persona', personaSchema);
+            const Persona = mongoose.model('Persona', server.personaSchema);
             Persona.find({
                 tipo: tipo
             })
@@ -149,9 +138,9 @@ api.post('/registro', (req, res) => {
     } else if (pass == "" || pass == null){
         res.status(400).json({"reason":"El parametro pass es obligatorio"});
     } else {
-        mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+        mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
-            const Persona = mongoose.model('Persona', personaSchema);
+            const Persona = mongoose.model('Persona', server.personaSchema);
             Persona.findOne({
                 cedula: cedula
             }, function(err, persona){
@@ -182,9 +171,9 @@ api.post('/doLogin', (req, res) => {
     }else if (pass == "" || pass == null){
         res.status(400).json({"resaon":"El parametro pass es obligatorio"});
     } else {
-        mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+        mongoose.connect(server.uri, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
-            const Persona = mongoose.model('Persona', personaSchema);
+            const Persona = mongoose.model('Persona', server.personaSchema);
             Persona.findOne({
                 cedula: cedula,
                 pass: pass
